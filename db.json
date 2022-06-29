@@ -2,7 +2,15 @@
   "todos": [
     {
       "id": 1,
-      "title": "Clear Room"
+      "title": "Task 01"
+    },
+    {
+      "id": 2,
+      "title": "Task 02"
+    },
+    {
+      "id": 1,
+      "title": "Task 03"
     }
   ]
 }
