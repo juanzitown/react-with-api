@@ -1,8 +1,8 @@
 ### React com API 01
 
-- Criando tela de listagem simples
-- Criando uma `service` usando o `fetch` para fazer um `GET`
-- Usando `jsonplaceholder` como Fake API
+- [ ] Criando tela de listagem simples
+- [ ] Criando uma `service` usando o `fetch` para fazer um `GET`
+- [ ] Usando `jsonplaceholder` como Fake API
 
 ## Trabalho:
 
