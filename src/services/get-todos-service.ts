@@ -4,7 +4,7 @@ type GetTodosServiceProps = {};
 
 async function getTodosService({}: GetTodosServiceProps) {
   return fetch(
-    "https://my-json-server.typicode.com/juanzitown/react-with-api/todos",
+    "http://localhost:3004/todos",
     { method: "GET" }
   ).then(async (response) => {
     const responseAsJson = await response.json();
