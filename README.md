@@ -1,15 +1,12 @@
-### React com API 01
+### React com API 02
 
-- [ ] Criando tela de listagem simples
-- [ ] Criando uma `service` usando o `fetch` para fazer um `GET`
-- [ ] Usando `jsonplaceholder` como Fake API
+- Criando uma modal com formulário simples
+- Criando uma `service` e usando o `fetch` para fazer um `POST`
+- Usando `jsonplaceholder` como Fake API
+- Entender pq a lista não atualiza quando cria um dado novo
+- Criar uma solução que faça o _refetch_ dos dados
 
-## Trabalho:
+### JSON Server tutorial
 
-- Usar a `modal` e o `useForm` do toolkit 80Lines para criar um form que salva o dado usando um `POST` do `jsonplaceholder`
-
-# Docs e Referências:
-
-- [https://jsonplaceholder.typicode.com/guide/](https://jsonplaceholder.typicode.com/guide/)
-- [https://my-json-server.typicode.com](https://my-json-server.typicode.com)
-- [https://developer.mozilla.org/pt-BR/docs/Web/API/Fetch_API/Using_Fetch](https://developer.mozilla.org/pt-BR/docs/Web/API/Fetch_API/Using_Fetch)
+- instale o `json-server` global na sua maquina com `npm install -g json-server`
+- `yarn json-server` em um terminal separado para rodar o fake json db
