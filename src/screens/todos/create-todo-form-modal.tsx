@@ -4,12 +4,12 @@ import useEditTodo from "../../api-hooks/use-edit-todo";
 import Button from "../../components/button";
 import Column from "../../components/column";
 import Form from "../../components/form";
+import Heading from "../../components/heading";
 import Input from "../../components/input";
 import Modal, { ModalProps } from "../../components/modal";
 import Row from "../../components/row";
 import useForm from "../../hooks/use-form";
 import required from "../../hooks/use-form/required";
-import editTodoService from "../../services/edit-todo-service";
 import TaskType from "../../types/task-type";
 
 type CreateTodoFormModalProps = { editTask?: TaskType | null } & ModalProps;
@@ -70,8 +70,13 @@ function CreateTodoFormModal({
   return (
     <Modal open={open} onClose={onClose}>
       <Form onSubmit={submit}>
-        <Column className="gap-md">
-          <Column>Task</Column>
+        <Column className="gap-sm text-center">
+          <Column>
+            <Heading value={2}>
+              {editTask ? `Editar tarefa` : "Criar nova tarefa"}
+            </Heading>
+            {editTask?.id && <Heading value={5}><strong>ID:</strong> {editTask.id}</Heading>}
+          </Column>
           <Column>
             <Input
               value={getValue("title")}
