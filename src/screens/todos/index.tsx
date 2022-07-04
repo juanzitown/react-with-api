@@ -1,27 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
 import useGetTodos from "../../api-hooks/use-get-todos";
 import Button from "../../components/button";
 import Column from "../../components/column";
-import editTodoService from "../../services/edit-todo-service";
 import TaskType from "../../types/task-type";
 import CreateTodoFormModal from "./create-todo-form-modal";
+import ConfirmDeleteModal from "./delete-todo-modal";
 import TodoListItem from "./todo-list-item";
 
 type TodosScreenProps = {};
 
 function TodosScreen({}: TodosScreenProps) {
   const [showModal, setShowModal] = React.useState(false);
-  const [showDeleteModal, setShowDeleteModal] = React.useState(false);
+  const [deleteItem, setDeleteItem] = React.useState<TaskType | null>(null);
 
   const { data: todos, pending } = useGetTodos({});
 
-  const [selectedItem, setSelectedItem] = React.useState<TaskType | null>(null);
-
-  const editTodo = () => {
-    if (selectedItem) {
-      editTodoService(selectedItem);
-    }
-  };
+  const [editItem, setEditItem] = React.useState<TaskType | null>(null);
 
   return (
     <Column className="bg-gray-200 min-h-screen p-xl gap-md">
@@ -34,21 +28,32 @@ function TodosScreen({}: TodosScreenProps) {
             key={task.id}
             task={task}
             onEdit={() => {
-              setSelectedItem(task);
+              setEditItem(task);
               setShowModal(true);
             }}
-            onDelete={() => setSelectedItem(task)}
+            onDelete={() => {
+              setDeleteItem(task);
+            }}
           />
         ))}
       </Column>
 
       <CreateTodoFormModal
-        editTask={selectedItem}
+        editTask={editItem}
         open={showModal}
         onClose={() => {
+          setEditItem(null);
           setShowModal(false);
-          setSelectedItem(null)
         }}
+      />
+
+      <ConfirmDeleteModal
+        open={!!deleteItem?.id}
+        onClose={() => {
+          setEditItem(null);
+          setDeleteItem(null);
+        }}
+        task={deleteItem || undefined}
       />
 
       <Button colorScheme="primary" onClick={() => setShowModal(true)}>
