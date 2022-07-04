@@ -1,12 +1,20 @@
-### React com API 02
+### React com API 03
 
-- Criando uma modal com formulário simples
-- Criando uma `service` e usando o `fetch` para fazer um `POST`
-- Usando `jsonplaceholder` como Fake API
-- Entender pq a lista não atualiza quando cria um dado novo
-- Criar uma solução que faça o _refetch_ dos dados
+- Explicação inicial de `React Query`
+- Criar uma API Hook para listar `Todos`
+- Criar uma API Hook para criar um `Todo`
+- Adicionar lógica de `refetch` dos dados ao criar, para a listagem de `Todos`
 
-### JSON Server tutorial
+### Para próxima aula implementar (resumo detalhado):
 
-- instale o `json-server` global na sua maquina com `npm install -g json-server`
-- `yarn json-server` em um terminal separado para rodar o fake json db
+- DELETE
+
+  - api hook
+  - invalidate da lista
+  - modal de confirmation (opcional)
+
+- EDITAR
+  - api hook
+  - invalidate da lista
+  - form modal de update
+  - juntar o create e o update de todo em uma form modal só (opcional)
