@@ -1,5 +1,6 @@
 import React from "react";
 import useCreateTodo from "../../api-hooks/use-create-todo";
+import useEditTodo from "../../api-hooks/use-edit-todo";
 import Button from "../../components/button";
 import Column from "../../components/column";
 import Form from "../../components/form";
@@ -8,11 +9,16 @@ import Modal, { ModalProps } from "../../components/modal";
 import Row from "../../components/row";
 import useForm from "../../hooks/use-form";
 import required from "../../hooks/use-form/required";
+import editTodoService from "../../services/edit-todo-service";
 import TaskType from "../../types/task-type";
 
-type CreateTodoFormModalProps = {} & ModalProps;
+type CreateTodoFormModalProps = { editTask?: TaskType | null } & ModalProps;
 
-function CreateTodoFormModal({ open, onClose }: CreateTodoFormModalProps) {
+function CreateTodoFormModal({
+  open,
+  onClose,
+  editTask,
+}: CreateTodoFormModalProps) {
   const { fetch: fetchCreateTodo, pending: pendingCreate } = useCreateTodo({
     onSuccess: () => {
       reset();
@@ -23,24 +29,41 @@ function CreateTodoFormModal({ open, onClose }: CreateTodoFormModalProps) {
     },
   });
 
-  const { getValue, getValues, setValue, setValues, reset, getError, submit } =
-    useForm({
-      onSubmit: (values) => {
-        fetchCreateTodo({
-          task: {
-            id: String(new Date().getTime()),
-            title: getValue("title"),
-          } as TaskType,
-        });
-      },
-      validations: {
-        title: [required],
-      },
-    });
+  const { fetch: fetchEditTodo, pending: pendingEdit } = useEditTodo({
+    onSuccess: () => {
+      reset();
+      onClose?.();
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const { getValue, setValue, reset, getError, submit } = useForm({
+    onSubmit: () => {
+      editTask
+        ? fetchEditTodo({
+            ...formTask,
+            id: editTask.id,
+          })
+        : fetchCreateTodo({
+            task: formTask,
+          });
+    },
+    validations: {
+      title: [required],
+    },
+  });
+
+  const formTask: TaskType = {
+    id: String(new Date().getTime()),
+    title: getValue("title"),
+  };
 
   React.useEffect(() => {
     if (open) {
       reset();
+      if (editTask) setValue("title", editTask.title);
     }
   }, [open]);
 
@@ -59,7 +82,11 @@ function CreateTodoFormModal({ open, onClose }: CreateTodoFormModalProps) {
             </Column>
           </Column>
           <Row className="gap-md">
-            <Button type="submit" colorScheme="primary" pending={pendingCreate}>
+            <Button
+              type="submit"
+              colorScheme="primary"
+              pending={editTask ? pendingEdit : pendingCreate}
+            >
               Save
             </Button>
             <Button colorScheme="primary" onClick={onClose}>
