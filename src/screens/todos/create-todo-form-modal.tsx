@@ -1,5 +1,5 @@
 import React from "react";
-import { useMutation, useQueryClient } from "react-query";
+import useCreateTodo from "../../api-hooks/use-create-todo";
 import Button from "../../components/button";
 import Column from "../../components/column";
 import Form from "../../components/form";
@@ -8,35 +8,20 @@ import Modal, { ModalProps } from "../../components/modal";
 import Row from "../../components/row";
 import useForm from "../../hooks/use-form";
 import required from "../../hooks/use-form/required";
-import createTodoService from "../../services/create-todo-service";
 import TaskType from "../../types/task-type";
 
-type CreateTodoFormModalProps = {
-  onCreate: () => void;
-} & ModalProps;
+type CreateTodoFormModalProps = {} & ModalProps;
 
-function CreateTodoFormModal({
-  open,
-  onClose,
-  onCreate,
-}: CreateTodoFormModalProps) {
-  // const [pendingCreate, setPendingCreate] = React.useState(false);
-
-  const queryClient = useQueryClient();
-  const { mutate: fetchCreateTodo, isLoading: pendingCreate } = useMutation(
-    createTodoService,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("/todos");
-        reset();
-        onCreate();
-        onClose?.();
-      },
-      onError: (error) => {
-        console.log(error);
-      },
-    }
-  );
+function CreateTodoFormModal({ open, onClose }: CreateTodoFormModalProps) {
+  const { fetch: fetchCreateTodo, pending: pendingCreate } = useCreateTodo({
+    onSuccess: () => {
+      reset();
+      onClose?.();
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
   const { getValue, getValues, setValue, setValues, reset, getError, submit } =
     useForm({
@@ -52,20 +37,6 @@ function CreateTodoFormModal({
         title: [required],
       },
     });
-
-  // async function fetchCreateTodo() {
-  //   setPendingCreate(true);
-  //   const savedTodo = await createTodoService({
-  //     task: {
-  //       id: String(new Date().getTime()),
-  //       title: getValue("title"),
-  //     } as TaskType,
-  //   });
-  //   reset();
-  //   onCreate();
-  //   onClose?.();
-  //   setPendingCreate(false);
-  // }
 
   React.useEffect(() => {
     if (open) {

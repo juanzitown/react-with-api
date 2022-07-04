@@ -1,10 +1,10 @@
 import TaskType from "../types/task-type";
 
-type createTodoServiceProps = {
+type CreateTodoServiceProps = {
   task: TaskType;
 };
 
-async function createTodoService({ task }: createTodoServiceProps) {
+async function createTodoService({ task }: CreateTodoServiceProps) {
   return fetch("http://localhost:4000/todos", {
     method: "POST",
     headers: {
