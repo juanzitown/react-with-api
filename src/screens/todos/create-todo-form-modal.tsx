@@ -1,4 +1,5 @@
 import React from "react";
+import { useMutation, useQueryClient } from "react-query";
 import Button from "../../components/button";
 import Column from "../../components/column";
 import Form from "../../components/form";
@@ -19,31 +20,52 @@ function CreateTodoFormModal({
   onClose,
   onCreate,
 }: CreateTodoFormModalProps) {
-  const [pendingCreate, setPendingCreate] = React.useState(false);
+  // const [pendingCreate, setPendingCreate] = React.useState(false);
+
+  const queryClient = useQueryClient();
+  const { mutate: fetchCreateTodo, isLoading: pendingCreate } = useMutation(
+    createTodoService,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("/todos");
+        reset();
+        onCreate();
+        onClose?.();
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+    }
+  );
 
   const { getValue, getValues, setValue, setValues, reset, getError, submit } =
     useForm({
       onSubmit: (values) => {
-        fetchCreateTodo();
+        fetchCreateTodo({
+          task: {
+            id: String(new Date().getTime()),
+            title: getValue("title"),
+          } as TaskType,
+        });
       },
       validations: {
         title: [required],
       },
     });
 
-  async function fetchCreateTodo() {
-    setPendingCreate(true);
-    const savedTodo = await createTodoService({
-      task: {
-        id: String(new Date().getTime()),
-        title: getValue("title"),
-      } as TaskType,
-    });
-    reset();
-    setPendingCreate(false);
-    onCreate();
-    onClose?.();
-  }
+  // async function fetchCreateTodo() {
+  //   setPendingCreate(true);
+  //   const savedTodo = await createTodoService({
+  //     task: {
+  //       id: String(new Date().getTime()),
+  //       title: getValue("title"),
+  //     } as TaskType,
+  //   });
+  //   reset();
+  //   onCreate();
+  //   onClose?.();
+  //   setPendingCreate(false);
+  // }
 
   React.useEffect(() => {
     if (open) {

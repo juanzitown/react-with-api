@@ -1,8 +1,8 @@
 import React from "react";
+import { useQuery } from "react-query";
 import Button from "../../components/button";
 import Column from "../../components/column";
 import getTodosService from "../../services/get-todos-service";
-import TaskType from "../../types/task-type";
 import CreateTodoFormModal from "./create-todo-form-modal";
 import TodoListItem from "./todo-list-item";
 
@@ -10,18 +10,23 @@ type TodosScreenProps = {};
 
 function TodosScreen({}: TodosScreenProps) {
   const [showModal, setShowModal] = React.useState(false);
-  const [pending, setPending] = React.useState(true);
-  const [todos, setTodos] = React.useState<TaskType[]>([]);
+  const { data: todos, isLoading: pending } = useQuery(
+    "/todos",
+    getTodosService
+  );
 
-  async function fetchTodos() {
-    const response = await getTodosService({});
-    setTodos(response);
-    setPending(false);
-  }
+  // const [pending, setPending] = React.useState(true);
+  // const [todos, setTodos] = React.useState<TaskType[]>([]);
 
-  React.useEffect(() => {
-    fetchTodos();
-  }, []);
+  // async function fetchTodos() {
+  //   const response = await getTodosService({});
+  //   setTodos(response);
+  //   setPending(false);
+  // }
+
+  // React.useEffect(() => {
+  //   fetchTodos();
+  // }, []);
 
   return (
     <Column className="bg-gray-200 min-h-screen p-xl gap-md">
@@ -29,7 +34,7 @@ function TodosScreen({}: TodosScreenProps) {
 
       <Column>
         {pending && <Column>Loading...</Column>}
-        {todos.map((task) => (
+        {todos?.map((task) => (
           <TodoListItem key={task.id} task={task} />
         ))}
       </Column>
@@ -40,7 +45,7 @@ function TodosScreen({}: TodosScreenProps) {
           setShowModal(false);
         }}
         onCreate={() => {
-          fetchTodos();
+          // fetchTodos();
         }}
       />
 
