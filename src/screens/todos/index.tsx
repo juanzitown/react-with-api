@@ -2,14 +2,15 @@ import React from "react";
 import useGetTodos from "../../api-hooks/use-get-todos";
 import Button from "../../components/button";
 import Column from "../../components/column";
-import ChangeTodoFormModal from "./change-todo-form-modal";
+import TaskType from "../../types/task-type";
+import TaskFormModal from "./task-form-modal";
 import TodoListItem from "./todo-list-item";
 
 type TodosScreenProps = {};
 
 function TodosScreen({}: TodosScreenProps) {
   const [showModal, setShowModal] = React.useState(false);
-  const [edit, setEdit] = React.useState({});
+  const [edit, setEdit] = React.useState<TaskType>();
 
   const { data: todos, pending } = useGetTodos({});
 
@@ -31,8 +32,9 @@ function TodosScreen({}: TodosScreenProps) {
         ))}
       </Column>
 
-      <ChangeTodoFormModal
+      <TaskFormModal
         edit={edit}
+        setEdit={setEdit as any}
         open={showModal}
         onClose={() => {
           setShowModal(false);

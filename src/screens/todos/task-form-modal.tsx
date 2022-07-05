@@ -11,12 +11,16 @@ import useForm from "../../hooks/use-form";
 import required from "../../hooks/use-form/required";
 import TaskType from "../../types/task-type";
 
-type ChangeTodoFormModalProps = { edit: TaskType & null } & ModalProps;
+type ChangeTodoFormModalProps = {
+  edit: TaskType | undefined;
+  setEdit: () => void;
+} & ModalProps;
 
 function ChangeTodoFormModal({
   open,
   onClose,
   edit,
+  setEdit,
 }: ChangeTodoFormModalProps) {
   const { fetch: fetchCreateTodo, pending: pendingCreate } = useCreateTodo({
     onSuccess: () => {
@@ -38,22 +42,27 @@ function ChangeTodoFormModal({
     },
   });
 
+  const editTask = (edit: TaskType) => {
+    fetchUpdateTodo({
+      task: {
+        id: edit.id,
+        title: getValue("title"),
+      } as TaskType,
+    });
+    setEdit({});
+  };
+
   const { getValue, getValues, setValue, setValues, reset, getError, submit } =
     useForm({
       onSubmit: (values) => {
-        edit === {}
+        edit === undefined
           ? fetchCreateTodo({
               task: {
                 id: String(new Date().getTime()),
                 title: getValue("title"),
               } as TaskType,
             })
-          : fetchUpdateTodo({
-              task: {
-                id: edit.id,
-                title: getValue("title"),
-              } as TaskType,
-            });
+          : editTask(edit);
       },
       validations: {
         title: [required],
