@@ -1,5 +1,6 @@
 import React from "react";
 import useCreateTodo from "../../api-hooks/use-create-todo";
+import useUpdateTodo from "../../api-hooks/use-update-todo";
 import Button from "../../components/button";
 import Column from "../../components/column";
 import Form from "../../components/form";
@@ -10,9 +11,13 @@ import useForm from "../../hooks/use-form";
 import required from "../../hooks/use-form/required";
 import TaskType from "../../types/task-type";
 
-type CreateTodoFormModalProps = {} & ModalProps;
+type ChangeTodoFormModalProps = { edit: TaskType & null } & ModalProps;
 
-function CreateTodoFormModal({ open, onClose }: CreateTodoFormModalProps) {
+function ChangeTodoFormModal({
+  open,
+  onClose,
+  edit,
+}: ChangeTodoFormModalProps) {
   const { fetch: fetchCreateTodo, pending: pendingCreate } = useCreateTodo({
     onSuccess: () => {
       reset();
@@ -23,15 +28,32 @@ function CreateTodoFormModal({ open, onClose }: CreateTodoFormModalProps) {
     },
   });
 
+  const { fetch: fetchUpdateTodo, pending: pendingUpdate } = useUpdateTodo({
+    onSuccess: () => {
+      reset();
+      onClose?.();
+    },
+    onError: (error: string) => {
+      console.log(error);
+    },
+  });
+
   const { getValue, getValues, setValue, setValues, reset, getError, submit } =
     useForm({
       onSubmit: (values) => {
-        fetchCreateTodo({
-          task: {
-            id: String(new Date().getTime()),
-            title: getValue("title"),
-          } as TaskType,
-        });
+        edit === {}
+          ? fetchCreateTodo({
+              task: {
+                id: String(new Date().getTime()),
+                title: getValue("title"),
+              } as TaskType,
+            })
+          : fetchUpdateTodo({
+              task: {
+                id: edit.id,
+                title: getValue("title"),
+              } as TaskType,
+            });
       },
       validations: {
         title: [required],
@@ -72,4 +94,4 @@ function CreateTodoFormModal({ open, onClose }: CreateTodoFormModalProps) {
   );
 }
 
-export default CreateTodoFormModal;
+export default ChangeTodoFormModal;

@@ -6,9 +6,10 @@ import useDeleteTodo from "../../api-hooks/use-delete-todo";
 
 type TodoListItemProps = {
   task: TaskType;
+  edit: () => void;
 };
 
-function TodoListItem({ task }: TodoListItemProps) {
+function TodoListItem({ task, edit }: TodoListItemProps) {
   const { fetch: fetchDeleteTodo, pending: pendingDelete } = useDeleteTodo({
     onSuccess: () => {
       window.confirm(`Task ${task.title} deleted`);
@@ -27,7 +28,7 @@ function TodoListItem({ task }: TodoListItemProps) {
       <input type="checkbox" />
       <Column>{task.id}</Column>
       <Column className="flex-1">{task.title}</Column>
-      <Button>Edit</Button>
+      <Button onClick={() => edit()}>Edit</Button>
       <Button colorScheme="danger" onClick={deleteTodo}>
         Delete
       </Button>

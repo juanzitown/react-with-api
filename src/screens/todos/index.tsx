@@ -2,13 +2,14 @@ import React from "react";
 import useGetTodos from "../../api-hooks/use-get-todos";
 import Button from "../../components/button";
 import Column from "../../components/column";
-import CreateTodoFormModal from "./create-todo-form-modal";
+import ChangeTodoFormModal from "./change-todo-form-modal";
 import TodoListItem from "./todo-list-item";
 
 type TodosScreenProps = {};
 
 function TodosScreen({}: TodosScreenProps) {
   const [showModal, setShowModal] = React.useState(false);
+  const [edit, setEdit] = React.useState({});
 
   const { data: todos, pending } = useGetTodos({});
 
@@ -19,11 +20,19 @@ function TodosScreen({}: TodosScreenProps) {
       <Column>
         {pending && <Column>Loading...</Column>}
         {todos?.map((task) => (
-          <TodoListItem key={task.id} task={task} />
+          <TodoListItem
+            key={task.id}
+            task={task}
+            edit={() => {
+              setEdit(task);
+              setShowModal(true);
+            }}
+          />
         ))}
       </Column>
 
-      <CreateTodoFormModal
+      <ChangeTodoFormModal
+        edit={edit}
         open={showModal}
         onClose={() => {
           setShowModal(false);
