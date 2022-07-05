@@ -1,3 +1,4 @@
+import Button from "../../components/button";
 import Column from "../../components/column";
 import Row from "../../components/row";
 import TaskType from "../../types/task-type";
@@ -11,7 +12,9 @@ function TodoListItem({ task }: TodoListItemProps) {
     <Row className="gap-md py-xs px-md border rounded items-center bg-white">
       <input type="checkbox" />
       <Column>{task.id}</Column>
-      <Column>{task.title}</Column>
+      <Column className="flex-1">{task.title}</Column>
+      <Button>Edit</Button>
+      <Button colorScheme="danger">Delete</Button>
     </Row>
   );
 }

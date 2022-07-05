@@ -1,7 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import React from "react";
 
-type ModalProps = {
+export type ModalProps = {
   open?: boolean;
   onClose?: () => void;
   children?: React.ReactNode;

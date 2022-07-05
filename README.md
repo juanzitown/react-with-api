@@ -1,15 +1,20 @@
-### React com API 01
+### React com API 03
 
-- [ ] Criando tela de listagem simples
-- [ ] Criando uma `service` usando o `fetch` para fazer um `GET`
-- [ ] Usando `jsonplaceholder` como Fake API
+- Explicação inicial de `React Query`
+- Criar uma API Hook para listar `Todos`
+- Criar uma API Hook para criar um `Todo`
+- Adicionar lógica de `refetch` dos dados ao criar, para a listagem de `Todos`
 
-## Trabalho:
+### Para próxima aula implementar (resumo detalhado):
 
-- Usar a `modal` e o `useForm` do toolkit 80Lines para criar um form que salva o dado usando um `POST` do `jsonplaceholder`
+- DELETE
 
-# Docs e Referências:
+  - api hook
+  - invalidate da lista
+  - modal de confirmation (opcional)
 
-- [https://jsonplaceholder.typicode.com/guide/](https://jsonplaceholder.typicode.com/guide/)
-- [https://my-json-server.typicode.com](https://my-json-server.typicode.com)
-- [https://developer.mozilla.org/pt-BR/docs/Web/API/Fetch_API/Using_Fetch](https://developer.mozilla.org/pt-BR/docs/Web/API/Fetch_API/Using_Fetch)
+- EDITAR
+  - api hook
+  - invalidate da lista
+  - form modal de update
+  - juntar o create e o update de todo em uma form modal só (opcional)
