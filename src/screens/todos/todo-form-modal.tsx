@@ -1,5 +1,6 @@
 import React from "react";
 import useCreateTodo from "../../api-hooks/use-create-todo";
+import useUpdateTodo from "../../api-hooks/use-update-todo";
 import Button from "../../components/button";
 import Column from "../../components/column";
 import Form from "../../components/form";
@@ -10,10 +11,22 @@ import useForm from "../../hooks/use-form";
 import required from "../../hooks/use-form/required";
 import TaskType from "../../types/task-type";
 
-type CreateTodoFormModalProps = {} & ModalProps;
+type TodoFormModalProps = {
+  task: TaskType | undefined;
+} & ModalProps;
 
-function CreateTodoFormModal({ open, onClose }: CreateTodoFormModalProps) {
+function TodoFormModal({ task, open, onClose }: TodoFormModalProps) {
   const { fetch: fetchCreateTodo, pending: pendingCreate } = useCreateTodo({
+    onSuccess: () => {
+      reset();
+      onClose?.();
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const { fetch: fetchUpdateTodo, pending: pendingUpdate } = useUpdateTodo({
     onSuccess: () => {
       reset();
       onClose?.();
@@ -25,30 +38,40 @@ function CreateTodoFormModal({ open, onClose }: CreateTodoFormModalProps) {
 
   const { getValue, getValues, setValue, setValues, reset, getError, submit } =
     useForm({
-      onSubmit: (values) => {
-        fetchCreateTodo({
-          task: {
-            id: String(new Date().getTime()),
-            title: getValue("title"),
-          } as TaskType,
-        });
+      onSubmit: (values: TaskType) => {
+        const isEdit = Boolean(values?.id);
+        if (isEdit) {
+          fetchUpdateTodo({ task: values });
+        } else {
+          fetchCreateTodo({ task: values });
+        }
       },
       validations: {
         title: [required],
       },
     });
 
+  //resets form validations
   React.useEffect(() => {
     if (open) {
       reset();
     }
   }, [open]);
 
+  //Update fields with task if any
+  React.useEffect(() => {
+    setValues({
+      ...(task || {}),
+    });
+  }, [task?.id]);
+
+  console.log({ task, form: getValues() });
+
   return (
     <Modal open={open} onClose={onClose}>
       <Form onSubmit={submit}>
         <Column className="gap-md">
-          <Column>Task</Column>
+          <Column>{task?.id ? "Editing Task" : "New Task"}</Column>
           <Column>
             <Input
               value={getValue("title")}
@@ -72,4 +95,4 @@ function CreateTodoFormModal({ open, onClose }: CreateTodoFormModalProps) {
   );
 }
 
-export default CreateTodoFormModal;
+export default TodoFormModal;
