@@ -7,6 +7,7 @@ import useForm from "../../hooks/use-form";
 import getTodosService from "../../services/get-todos-service";
 import TaskType from "../../types/task-type";
 import TodoListItem from "./todo-list-item";
+import postTodoService from "../../services/post-todo-service";
 
 type TodosScreenProps = {};
 
@@ -14,7 +15,7 @@ function TodosScreen({}: TodosScreenProps) {
   const [showModal, setShowModal] = React.useState(false);
   const [pending, setPending] = React.useState(true);
   const [todos, setTodos] = React.useState<TaskType[]>([]);
-
+  const [newTask, setNewTask] = React.useState({} as TaskType);
   const { getValue, setValue, getError } = useForm({
     validations: {
       title: [],
@@ -23,10 +24,15 @@ function TodosScreen({}: TodosScreenProps) {
 
   async function fetchTodos() {
     const response = await getTodosService({});
-    console.log("todos:", response);
     setTodos(response);
     setPending(false);
   }
+
+  const addNewTask = async (task: TaskType) => {
+    await postTodoService(newTask);
+    await fetchTodos();
+    setNewTask("");
+  };
 
   React.useEffect(() => {
     fetchTodos();
@@ -48,15 +54,25 @@ function TodosScreen({}: TodosScreenProps) {
       </Column>
 
       <Modal open={showModal} onClose={() => setShowModal(false)}>
-        <Column>isso aqui está na modal...</Column>
+        <Column>Write the task</Column>
         <Input
-          value={getValue("title")}
-          onChange={(value) => setValue("title", value)}
+          value={newTask.title}
+          onChange={(value) =>
+            setNewTask({ id: String(todos.length + 1), title: value })
+          }
         />
+        <Button
+          colorScheme="info"
+          onClick={() => {
+            addNewTask(newTask), setShowModal(false);
+          }}
+        >
+          Create Task
+        </Button>
       </Modal>
 
       <Button colorScheme="primary" onClick={() => setShowModal(true)}>
-        open modal
+        New Task
       </Button>
     </Column>
   );
