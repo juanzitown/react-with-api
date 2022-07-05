@@ -53,7 +53,7 @@ function _Input(
 const Input = React.forwardRef(_Input);
 export default Input;
 
-const baseClasses = `w-full min-h-xl py-0 text-sm text-gray-900 placeholder-gray-300 rounded-md shadow-sm transition`;
+const baseClasses = `w-full min-h-xl px-xs py-0 text-sm text-gray-900 placeholder-gray-300 border outline-none rounded-md shadow-sm transition`;
 const defaultClasses = `bg-gray-50 border-gray-300 focus:border-primary-300 focus:ring focus:ring-primary-200`;
 const errorClasses = `bg-danger-50 bg-opacity-33 border-danger-300 focus:border-danger-300 focus:ring focus:ring-danger-200`;
 const disabledClasses = `disabled:border-dashed disabled:border-gray-200 disabled:bg-white disabled:cursor-not-allowed disabled:text-gray-400`;

@@ -1,26 +1,47 @@
 import React from "react";
+import useGetTodos from "../../api-hooks/use-get-todos";
 import Button from "../../components/button";
 import Column from "../../components/column";
-import Input from "../../components/input";
-import Row from "../../components/row";
+import ChangeTodoFormModal from "./change-todo-form-modal";
+import TodoListItem from "./todo-list-item";
 
-function TodosScreen() {
-  const [value, setValue] = React.useState("");
+type TodosScreenProps = {};
 
-  React.useEffect(() => {
-    fetch("https://my-json-server.typicode.com/juanzitown/react-with-api/todos")
-      .then((response) => response.json())
-      .then((json) => console.log(json));
-  }, []);
+function TodosScreen({}: TodosScreenProps) {
+  const [showModal, setShowModal] = React.useState(false);
+  const [edit, setEdit] = React.useState({});
+
+  const { data: todos, pending } = useGetTodos({});
 
   return (
     <Column className="bg-gray-200 min-h-screen p-xl gap-md">
       <h1 className="text-3xl font-bold underline">Hello world! TODOS</h1>
-      <Input value={value} onChange={setValue} />
-      <Row>
-        <Button colorScheme="danger">danger</Button>
-        <Button colorScheme="primary">primary</Button>
-      </Row>
+
+      <Column>
+        {pending && <Column>Loading...</Column>}
+        {todos?.map((task) => (
+          <TodoListItem
+            key={task.id}
+            task={task}
+            edit={() => {
+              setEdit(task);
+              setShowModal(true);
+            }}
+          />
+        ))}
+      </Column>
+
+      <ChangeTodoFormModal
+        edit={edit}
+        open={showModal}
+        onClose={() => {
+          setShowModal(false);
+        }}
+      />
+
+      <Button colorScheme="primary" onClick={() => setShowModal(true)}>
+        New Todo
+      </Button>
     </Column>
   );
 }
