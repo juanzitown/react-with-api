@@ -1,14 +1,11 @@
 import TaskType from "../types/task-type";
+import api from "./api";
 
 type GetTodosServiceProps = {};
 
 async function getTodosService({}: GetTodosServiceProps) {
-  return fetch("http://localhost:4000/todos", { method: "GET" }).then(
-    async (response) => {
-      const responseAsJson = await response.json();
-      return responseAsJson as TaskType[];
-    }
-  );
+  const response = (await api.get("/todos")) as any;
+  return response as TaskType[];
 }
 
 export default getTodosService;

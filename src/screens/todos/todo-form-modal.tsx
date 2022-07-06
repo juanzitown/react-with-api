@@ -65,8 +65,6 @@ function TodoFormModal({ task, open, onClose }: TodoFormModalProps) {
     });
   }, [task?.id]);
 
-  console.log({ task, form: getValues() });
-
   return (
     <Modal open={open} onClose={onClose}>
       <Form onSubmit={submit}>

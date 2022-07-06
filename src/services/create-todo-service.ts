@@ -1,20 +1,13 @@
 import TaskType from "../types/task-type";
+import api from "./api";
 
 type CreateTodoServiceProps = {
   task: TaskType;
 };
 
 async function createTodoService({ task }: CreateTodoServiceProps) {
-  return fetch("http://localhost:4000/todos", {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-    },
-    body: JSON.stringify(task),
-  }).then(async (response) => {
-    const responseAsJson = await response.json();
-    return responseAsJson as TaskType;
-  });
+  const response = (await api.post("/todos", task)) as any;
+  return response as TaskType;
 }
 
 export default createTodoService;
