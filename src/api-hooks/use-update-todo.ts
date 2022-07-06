@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import createTodoService from "../services/create-todo-service";
+import updateTodoService from "../services/update-todo-service";
 import TaskType from "../types/task-type";
 
 type UseUpdateTodoProps = {
@@ -9,9 +9,9 @@ type UseUpdateTodoProps = {
 
 function useUpdateTodo({ onSuccess, onError }: UseUpdateTodoProps) {
   const queryClient = useQueryClient();
-  const { mutate: fetch, isLoading: pending } = useMutation(createTodoService, {
-    onSuccess: (data) => {
-      queryClient.invalidateQueries("/todos");
+  const { mutate: fetch, isLoading: pending } = useMutation(updateTodoService, {
+    onSuccess: async (data) => {
+      await queryClient.invalidateQueries("/todos");
       onSuccess?.(data);
     },
     onError,

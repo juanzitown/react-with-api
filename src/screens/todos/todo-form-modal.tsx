@@ -51,19 +51,15 @@ function TodoFormModal({ task, open, onClose }: TodoFormModalProps) {
       },
     });
 
-  //resets form validations
+  //Update fields with task if any
   React.useEffect(() => {
     if (open) {
       reset();
     }
-  }, [open]);
-
-  //Update fields with task if any
-  React.useEffect(() => {
     setValues({
       ...(task || {}),
     });
-  }, [task?.id]);
+  }, [task?.id, open]);
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -80,7 +76,11 @@ function TodoFormModal({ task, open, onClose }: TodoFormModalProps) {
             </Column>
           </Column>
           <Row className="gap-md">
-            <Button type="submit" colorScheme="primary" pending={pendingCreate}>
+            <Button
+              type="submit"
+              colorScheme="primary"
+              pending={pendingCreate || pendingUpdate}
+            >
               Save
             </Button>
             <Button colorScheme="primary" onClick={onClose}>

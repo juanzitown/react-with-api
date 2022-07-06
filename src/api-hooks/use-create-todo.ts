@@ -10,8 +10,8 @@ type UseCreateTodoProps = {
 function useCreateTodo({ onSuccess, onError }: UseCreateTodoProps) {
   const queryClient = useQueryClient();
   const { mutate: fetch, isLoading: pending } = useMutation(createTodoService, {
-    onSuccess: (data) => {
-      queryClient.invalidateQueries("/todos");
+    onSuccess: async (data) => {
+      await queryClient.invalidateQueries("/todos");
       onSuccess?.(data);
     },
     onError,
